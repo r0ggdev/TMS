@@ -81,6 +81,18 @@ public:
 		}
 	}
 
+	void searchUser(string _user) {
+		for (int i = 0; i < lstClients.listLength(); i++) {
+			if (lstClients.getPosition(i)->data->getName() == _user || lstClients.getPosition(i)->getUser() == _user) {
+				cout << lstClients.getPosition(i)->showAdminInfo();
+				break;
+			}
+
+		}
+	}
+
+
+
 private:
 	string directory;
 	LinkedList<Client*> lstClients;

@@ -123,6 +123,8 @@
     <ClInclude Include="Headers.h" />
     <ClInclude Include="Lists.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="Order.h" />
+    <ClInclude Include="Product.h" />
     <ClInclude Include="Queues.h" />
     <ClInclude Include="Stacks.h" />
     <ClInclude Include="User.h" />

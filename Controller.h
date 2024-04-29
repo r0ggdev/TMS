@@ -3,6 +3,11 @@
 #include"Menu.h"
 #include"Client.h"
 #include"User.h"
+#include"Ruta.h"
+#include "Inconvenientes.h"
+#include "Comentarios.h"
+#include "Servicio.h"
+#include "Entrega.h"
 
 #include<conio.h>
 
@@ -21,6 +26,12 @@ public:
 
         //clients = *new LinkedList<User*>();
         Users = new User();
+
+        lstr = *new LinkedList<CRuta*>();
+        lste = *new LinkedList<CEntrega*>();
+        lsts = *new LinkedList<CServicio*>();
+        lsti = *new LinkedList<CInconvenientes*>();
+        lstc = *new LinkedList<CComentarios*>();
     }
     ~Controller() {}
 
@@ -92,16 +103,51 @@ public:
         } while (!login());
 
         if (login()) {
-            system("cls");
-            cout << "Bienvenido";
+            char value[50] = "";
+
+                do {
+                    system("cls");
+
+                    cout << "\nBienvenido, que desea hacer: ";
+                    cout << "\n 1. Ver info: ";
+                    cout << "\n 2. Hacer un pedido:";
+                    cout << "\n 3. Ver reportes: ";
+                    cout << "\n 4. Cerrar sesion";
+
+                    cin >> value;
+                } while (!isDigit(value));
+
+                int temp = atoi(value);
+                
+                switch (temp) {
+                case 1: 
+                    Users->searchUser(usernow);
+                    _getch();
+                    break;
+                
+                case 2:
+                case 3:
+                case 4:
+                    break;
+
+                default:
+                    break;
+                }
+
+
             _getch();
         }
+
         system("cls");
         title();
     }
 
     bool login() {
-        return Users->getPassFile(user) == user && Users->getUserFile(user) == password ? true : false;
+        if (Users->getPassFile(user) == user && Users->getUserFile(user) == password) {
+            usernow = user;
+            return true;
+        }
+        return false; 
     }
 
     void dataEntry(char* input) {
@@ -254,12 +300,10 @@ public:
 
 
 private:
-   // Login login;
-   //Client* clients;
 
-    //LinkedList<User*> users;
    User* Users;
 
+   string usernow;
     char user[50];
     char password[50];
 
@@ -269,5 +313,12 @@ private:
     int _DNI, _RUC, _Phone, _Age;
 
     char verify;
+
+    LinkedList<CRuta*> lstr;
+    LinkedList<CEntrega*> lste;
+    LinkedList<CServicio*> lsts;
+    LinkedList<CInconvenientes*> lsti;
+    LinkedList<CComentarios*> lstc;
+
 };
 
