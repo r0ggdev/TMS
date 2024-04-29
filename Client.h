@@ -33,6 +33,6 @@ public:
 	CustomerInfo* data;
 	Companie* companie;
 private:
-	char password[8];
-	char user[20];
+	char password[50];
+	char user[50];
 };
