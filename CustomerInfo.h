@@ -25,16 +25,6 @@ public:
 
 	~CustomerInfo() {}
 
-	int createID(char name[]) {
-		srand(time(nullptr));
-
-		int value1 = abs(int(*name));
-		int value2 = DNI % 1000;
-		int suffix = rand() % 1000;
-
-		return (value1 * 1000) + value2 + suffix;
-	}
-
 	void setName(char _name[]) { strcpy_s(this->name, sizeof(name), _name); }
 	void setLastName(char _lastname[]) { strcpy_s(this->lastname, sizeof(lastname), _lastname); }
 	void setDNI(int _DNI) { this->DNI = _DNI; }
@@ -57,6 +47,18 @@ public:
 		print << "\nEdad: " << age;
 		print << "\nTelefono: " << phone;
 		return (print.str());
+	}
+
+private:
+	int createID(char name[]) {
+		srand(time(nullptr));
+
+		int value1 = abs(int(*name));
+		int value2 = DNI % 1000;
+		int suffix = rand() % 1000;
+
+		int value = (value1 * 1000) + value2 + suffix;
+		return abs(value);
 	}
 
 protected:

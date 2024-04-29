@@ -6,26 +6,46 @@ class User
 {
 public:
 	User(){
+		lstClients = *new LinkedList<Client*>();
 	}
 	~User(){}
 
-	void setDirectory(int ID) {
+	void setDirectory(string user) {
 		ostringstream  print;
 		print << ".\\Users\\";
-		print << ID;
+		print << user;
 		print << ".dat";
 		directory = (print.str());
 	}
 
-	void registerClient(Client* newClient) {
-		lstClients.addInitial(newClient);
-		
-		setDirectory(newClient->data->getID());
+	void registerClient(Client* client){
+		lstClients.addInitial(client);
+		setDirectory(client->getUser());
 
 		fileWrite.open(directory, ios::binary);
 
 		if (fileWrite.is_open()) {
-			fileWrite.write(reinterpret_cast<char*>(newClient), sizeof(Client));
+			fileWrite << client->getUser(); 
+			fileWrite<< endl;
+			fileWrite << client->getPassword();
+			fileWrite << endl;
+			fileWrite << client->data->getID();
+			fileWrite << endl;
+			fileWrite << client->data->getName();
+			fileWrite << endl;
+			fileWrite << client->data->getLastName();
+			fileWrite << endl;
+			fileWrite << client->data->getAge();
+			fileWrite << endl;
+			fileWrite << client->data->getDNI();
+			fileWrite << endl;
+			fileWrite << client->data->getPhone();
+			fileWrite << endl;
+			fileWrite << client->companie->getNameCompany();
+			fileWrite << endl;
+			fileWrite << client->companie->getRUC();
+			fileWrite << endl;
+
 			fileWrite.close();
 		}
 		else {
@@ -33,7 +53,33 @@ public:
 		}
 	}
 
+	string getPassFile(string user){
+		setDirectory(user);
+		fileRead.open(directory); 
+		if (fileRead.is_open()) {
+			getline(fileRead, line);
+			fileRead.close();
+		}
+		return line;
+	}
+	string getUserFile(string user){
+		setDirectory(user);
+		fileRead.open(directory);
+		if (fileRead.is_open()) {
+			getline(fileRead, line);
+			getline(fileRead, line);
+			fileRead.close();
+		}
+		return line;
+	}
 
+	void loadUsers() {
+		for (int i = 0; i < lstClients.listLength(); i++) {
+			Client* client = lstClients.getPosition(i);
+			fileRead.open(directory, ios::out); 
+
+		}
+	}
 
 private:
 	string directory;
@@ -42,5 +88,5 @@ private:
 	ofstream fileWrite;
 	ifstream fileRead;
 	string line, text;
-	string directory;
+
 };

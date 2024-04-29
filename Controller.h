@@ -2,6 +2,7 @@
 
 #include"Menu.h"
 #include"Client.h"
+#include"User.h"
 
 #include<conio.h>
 
@@ -18,6 +19,8 @@ public:
         *DNI = '/O', *RUC = '/O', *phone = '/O';
         *age = '/O';
 
+        //clients = *new LinkedList<User*>();
+        Users = new User();
     }
     ~Controller() {}
 
@@ -86,10 +89,19 @@ public:
                 break;
             }
 
-        } while (/*!login.verify(clients, user, password)*/ true);
+        } while (!login());
 
+        if (login()) {
+            system("cls");
+            cout << "Bienvenido";
+            _getch();
+        }
         system("cls");
         title();
+    }
+
+    bool login() {
+        return Users->getPassFile(user) == user && Users->getUserFile(user) == password ? true : false;
     }
 
     void dataEntry(char* input) {
@@ -125,6 +137,8 @@ public:
                 |  _ <  __/ (_| | \__ \ |_| | |  __/\__ \  __/
                 |_| \_\___|\__, |_|___/\__|_|  \___||___/\___|
                            |___/                              
+
+                       escriba _ para salir
             
 
 )";
@@ -133,12 +147,14 @@ public:
         cout << "\nCree su user: ";
         color::dataEntry(user, color::SKY_BLUE);
 
-        cout << "\nCree su password: ";
-        color::dataEntry(password, color::SKY_BLUE);
+        if (user[0] != '_') {
 
-        system("cls");
-        color::setTextColor(color::SKY_BLUE);
-        cout << R"(
+            cout << "\nCree su password: ";
+            color::dataEntry(password, color::SKY_BLUE);
+
+            system("cls");
+            color::setTextColor(color::SKY_BLUE);
+            cout << R"(
 
                  ____        _              ____                                 _           
                 |  _ \  __ _| |_ ___  ___  |  _ \ ___ _ __ ___  ___  _ __   __ _| | ___  ___ 
@@ -148,43 +164,43 @@ public:
             
 
 )";
-        color::reset();
-        cout << "\nIngrese su Nombre: ";
-        color::dataEntry(name, color::SKY_BLUE);
-
-        cout << "\nIngrese su Apellido: ";
-        color::dataEntry(lastname, color::SKY_BLUE);
-
-        do
-        {
             color::reset();
-            cout << "\nIngrese su DNI: ";
+            cout << "\nIngrese su Nombre: ";
+            color::dataEntry(name, color::SKY_BLUE);
+
+            cout << "\nIngrese su Apellido: ";
+            color::dataEntry(lastname, color::SKY_BLUE);
+
+            do
+            {
+                color::reset();
+                cout << "\nIngrese su DNI: ";
+                color::setTextColor(color::SKY_BLUE);
+                cin >> DNI;
+                color::reset();
+            } while (!isDigit(DNI));
+            do
+            {
+                color::reset();
+                cout << "\nIngrese su Edad: ";
+                color::setTextColor(color::SKY_BLUE);
+                cin >> age;
+                color::reset();
+            } while (!isDigit(age));
+
+            do
+            {
+                color::reset();
+                cout << "\nIngrese su Telefono: ";
+                color::setTextColor(color::SKY_BLUE);
+                cin >> phone;
+                color::reset();
+            } while (!isDigit(phone));
+
+
+            system("cls");
             color::setTextColor(color::SKY_BLUE);
-            cin >> DNI;
-            color::reset();
-        } while (!isDigit(DNI));
-        do
-        {
-            color::reset();
-            cout << "\nIngrese su Edad: ";
-            color::setTextColor(color::SKY_BLUE);
-            cin >> age;
-            color::reset();
-        } while (!isDigit(age));
-
-        do
-        {
-            color::reset();
-            cout << "\nIngrese su Telefono: ";
-            color::setTextColor(color::SKY_BLUE);
-            cin >> phone;
-            color::reset();
-        } while (!isDigit(phone));
-
-
-        system("cls");
-        color::setTextColor(color::SKY_BLUE);
-        cout << R"(
+            cout << R"(
 
                  ____        _              _____                                     
                 |  _ \  __ _| |_ ___  ___  | ____|_ __ ___  _ __  _ __ ___  ___  __ _ 
@@ -195,29 +211,30 @@ public:
             
 
 )";
-        color::reset();
-        cout << "\nIngrese el nombre de su empresa: ";
-
-        color::dataEntry(name_company, color::SKY_BLUE);
-
-        do {
             color::reset();
-            cout << "\nIngrese el RUC de su empresa: ";
-            color::setTextColor(color::SKY_BLUE);
-            cin >> RUC;
-            color::reset();
-        } while (!isDigit(RUC));
+            cout << "\nIngrese el nombre de su empresa: ";
 
-        _Age = atoi(age);
-        _DNI = atoi(DNI);
-        _RUC = atoi(RUC);
-        _Phone = atoi(phone);
+            color::dataEntry(name_company, color::SKY_BLUE);
 
-        clients = new Client(name, lastname, _DNI, _Age, _Phone, name_company, _RUC, user, password);
-       
-        system("cls");
-        color::setTextColor(color::GREEN);
-        cout << R"(
+            do {
+                color::reset();
+                cout << "\nIngrese el RUC de su empresa: ";
+                color::setTextColor(color::SKY_BLUE);
+                cin >> RUC;
+                color::reset();
+            } while (!isDigit(RUC));
+
+            _Age = atoi(age);
+            _DNI = atoi(DNI);
+            _RUC = atoi(RUC);
+            _Phone = atoi(phone);
+
+            //clients = new Client(name, lastname, _DNI, _Age, _Phone, name_company, _RUC, user, password);
+            Users->registerClient(new Client(name, lastname, _DNI, _Age, _Phone, name_company, _RUC, user, password));
+
+            system("cls");
+            color::setTextColor(color::GREEN);
+            cout << R"(
                  ____            _     _                         _ _                  
                 |  _ \ ___  __ _(_)___| |_ _ __ ___     _____  _(_) |_ ___  ___  ___  
                 | |_) / _ \/ _` | / __| __| '__/ _ \   / _ \ \/ / | __/ _ \/ __|/ _ \ 
@@ -226,10 +243,11 @@ public:
                            |___/                                                      
         )";
 
-        color::reset();
-        cout << clients->showAdminInfo();
-        system("pause");
+            color::reset();
+        //cout << clients->showAdminInfo();
+            system("pause");
 
+        }
         system("cls");
         title();
     }
@@ -237,7 +255,10 @@ public:
 
 private:
    // Login login;
-    Client* clients;
+   //Client* clients;
+
+    //LinkedList<User*> users;
+   User* Users;
 
     char user[50];
     char password[50];
