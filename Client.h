@@ -6,9 +6,8 @@ class Client {
 public:
 	Client(string _name, string _lastname, int _DNI, short _age, int _phone, string _name_company, int _ruc, string _user, string _password) {
 
-		data = new CustomerInfo(_name, _lastname, _DNI, _age, _phone);
+		data = new CustomerInfo(_user, _name, _lastname, _DNI, _age, _phone);
 		company = new Company(_ruc, _name_company);
-	
 		this->user = _user;
 		this->password = _password;
 	}
@@ -41,6 +40,10 @@ public:
 
 	string getUser() { return user; }
 	string getPassword() { return password; }
+
+
+	void setUser(string _user) { data->setID(encryption(_user,4)); user = _user; }
+	void setPassword(string _password) { password = _password; }
 
 public:
 	CustomerInfo* data;

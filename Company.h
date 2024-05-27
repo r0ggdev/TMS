@@ -17,6 +17,9 @@ public:
 	int getRuc() { return this->ruc; }
 	string getNameCompany() { return this->name; }
 
+	void setRuc(int _ruc) { this->ruc = _ruc; }
+	void setNameCompany(string _name) { this->name = _name; }
+
 	string showCompany() {
 		ostringstream print;
 		print << "\n\n\tDatos de la Empresa\n";

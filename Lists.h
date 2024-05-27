@@ -115,7 +115,7 @@ public:
             }
             aux = aux->next;
         }
-        // se debe agregar una opcion de lo que ocurre si no encuentra un valor
+        return empty;
     }
 
 private:

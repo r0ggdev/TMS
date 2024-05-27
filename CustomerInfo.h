@@ -4,12 +4,12 @@
 class CustomerInfo
 {
 public:
-	CustomerInfo(string _name = "", string _lastname = "", int _DNI = 0, short _age = 0, int _phone = 0) {
+	CustomerInfo(string _id="", string _name = "", string _lastname = "", int _DNI = 0, short _age = 0, int _phone = 0) {
 		this->name = _name;
 		this->lastname = _lastname;
 		this->dni = _DNI;
 		this->age = _age;
-		this->id = createID(name);
+		this->id = encryption(_id, 4);
 		this->phone = _phone;
 	}
 
@@ -20,13 +20,15 @@ public:
 	void setDNI(int _DNI) { this->dni = _DNI; }
 	void setAge(short _age) { this->age = _age; }
 	void setPhone(int _phone) { this->phone = _phone; }
+	void setID(string _id) { this->id = _id;}
+
 
 	string getName() { return name; }
 	string getLastName() { return lastname; }
 	int getDNI() { return dni; }
 	int getPhone() { return phone; }
 	short getAge() { return age; }
-	short getID() { return id; }
+	string getID() { return id; }
 
 	string showCustormerInfo() {
 
@@ -42,24 +44,8 @@ public:
 		return (print.str());
 	}
 
-private:
-	int createID(string _name) {
-
-		srand(time(nullptr));
-		
-		char name_convert[_size_];
-		strcpy(name_convert, _name.c_str());
-
-		int value1 = abs(int(name_convert));
-		int value2 = dni % 1000;
-		int suffix = rand() % 1000;
-		int value = (value1 * 1000) + value2 + suffix;
-		
-		return abs(value);
-	}
-
 protected:
-	string name, lastname;
-	int dni, id, phone;
+	string id, name, lastname;
+	int dni, phone;
 	short age;
 };
