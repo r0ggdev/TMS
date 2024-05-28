@@ -107,10 +107,10 @@ public:
         return getPosition(listlength - 1);
     }
 
-    value search(value _element, function<bool(value, value)>compare){
+    value search(function<bool(value)>compare){
         Node* aux = initial;
         while (aux!=nullptr) {
-            if (compare(_element, initial->element)) {
+            if (compare(aux->element)) {
                 return aux->element;
             }
             aux = aux->next;
