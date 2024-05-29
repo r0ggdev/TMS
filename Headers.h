@@ -55,50 +55,74 @@ bool isDigit(const char input[]) {
     return true;
 }
 
+void clearMsgbox() {
+    position(msgX - 1, msgY);
+    for (int i = 0; i < 100; i++) { cout << " "; }
+}
+
+void msgbox(string _message, color::TextColor txt_color = color::WHITE, color::BackgroundColor bg_color = color::BG_BLACK) {
+    clearMsgbox();
+    color::setTxtBgColor(txt_color, bg_color);
+    position(msgX, msgY);
+    cout << _message;
+    color::reset();
+}
+
 template<typename T>
 void boxInput(int _x, int _y, string _tittle, T& _input, int _width = 25, int _height = 1) {
-
+        
     boxAscii(_x, _y, _width, _height);
-
     position(_x + 2, _y);
     cout << " " << _tittle << " ";
 
     position(_x + 2, _y + 1);
-
     if constexpr (is_same_v<T, string>) {
-        color::setTxtBgColor(color::GREEN, color::BG_BLACK);
-        getline(cin, _input);
-        color::reset();
+        do {
+            position(_x + 2, _y + 1);
+            color::setTxtBgColor(color::GREEN, color::BG_BLACK);
+            getline(cin, _input);
+            color::reset();
+
+            if (_input == "") {
+                msgbox("Valor vacio no valido", color::LIGHT_RED);
+            }
+            else {
+                clearMsgbox();
+            }
+        } while (_input == "");
+
     }
     else {
         bool valid = false;
-
         while (!valid) {
             string inputStr;
-            
             color::setTxtBgColor(color::GREEN, color::BG_BLACK);
             getline(cin, inputStr);
             color::reset();
-
+            
             const char* inputCStr = inputStr.c_str();
             
             if (!isDigit(inputCStr)) {
-               color::reset();
-
-               position(_x + 2, _y + 1);
-               for (int i = 0; i < _width-1; ++i) {
-                   cout << " ";
-               }
-               position(_x + 2, _y + 1);
+                color::reset();
+                position(_x + 2, _y + 1);
+                for (int i = 0; i < _width-1; ++i) { cout << " "; }
+                position(_x + 2, _y + 1);
             }
             else {
                 istringstream(inputStr) >> _input;
                 valid = true;
-                position(msgX, msgY);
-                for (int i = 0; i < 100; i++) {
-                    cout << " ";
-                }
+                clearMsgbox();
             }
+        }
+    }
+}
+
+void clearArea(int x, int y, int width, int height) {
+    color::reset();
+    for (int j = y; j <= y + height +1; j++) {
+        position(x, j);
+        for (int i = 0; i <= width + 1; i++) {
+            cout << " ";
         }
     }
 }
