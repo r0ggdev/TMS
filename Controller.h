@@ -1,23 +1,58 @@
 #pragma once
 #include"Client.h"
 #include"Users.h"
+#define subMenu_X 46
+#define subMenu_Y 15
+#define subMenu_W 30
+#define subMenu_H 3
 
 class Controller
 {
 public:
-	Controller() { users = new User(); }
-	~Controller(){}
+	Controller() {
+		users = new User();
+		confirmationMenu = new MenuLibrary::RightLeft::AllOptions(subMenu_X, subMenu_Y, 2, 62, 0, color::BG_GRAY, color::BG_YELLOW);
+		confirmation = false;
+		optionsMenu[0] = { "Aceptar" };
+		optionsMenu[1] = { "Cancelar" };
+	}
+	~Controller() {}
+	
+	void menuConfirmation(bool& confirmation) {
+		confirmation = false;
 
-	void registerUser(Client*& client){
+		color::setBackgroundColor(color::BG_YELLOW);
+		boxAscii(subMenu_X - 4, subMenu_Y - 2, subMenu_W, subMenu_H);
+		confirmationMenu->setColorReset(color::BLACK, color::BG_YELLOW);
 
-		boxInput(10, 14, "User:", user);
-		client->setUser(user);
+		functionsSubMenu = {
+			[&confirmation]() {
+				confirmation = true;
+				clearArea(subMenu_X - 4, subMenu_Y - 2, subMenu_W, subMenu_H);
+			},
+			[&confirmation]() {confirmation = false; }
+		};
+
+		confirmationMenu->addOptions(optionsMenu, functionsSubMenu);
+
+		while (!confirmation) {
+			confirmationMenu->showMenu();
+		}
+		color::reset();
+	}
+
+	void registerUser(Client*& client) {
+
+		do {
+			boxInput(10, 14, "User:", user);
+			client->setUser(user);
+		} while (users->clientExists(client));
 
 		boxInput(45, 14, "Password:", password);
 		client->setPassword(password);
 	}
-	
-	void registerData(Client*& client){
+
+	void registerData(Client*& client) {
 
 		boxInput(80, 14, "Nombre:", name);
 		client->data->setName(name);
@@ -25,13 +60,22 @@ public:
 		boxInput(10, 17, "Apellido:", lastname);
 		client->data->setLastName(lastname);
 
-		boxInput(45, 17, "DNI:", dni);
+		do { 
+			msgbox("El rango es de 8 digitos", color::YELLOW);
+			boxInput(45, 17, "DNI:", dni); 
+		} while (dni < 10000000 || dni > 999999999);
 		client->data->setDNI(dni);
-		
-		boxInput(80, 17, "Edad:", age);
+
+		do { 
+			msgbox("El rango de edad es de 20 a 50", color::YELLOW);
+			boxInput(80, 17, "Edad:", age); 
+		} while (age < 20 || age > 50);
 		client->data->setAge(age);
 
-		boxInput(10, 20, "Telefono:", phone);
+		do { 
+			msgbox("Debe tener 9 cifras", color::YELLOW);
+			boxInput(10, 20, "Telefono:", phone); 
+		} while (phone < 900000000 || phone > 999999999);
 		client->data->setPhone(phone);
 	}
 
@@ -40,23 +84,30 @@ public:
 		boxInput(45, 20, "Nombre Empresa:", name_company);
 		client->company->setNameCompany(name_company);
 
-		boxInput(80, 20, "Ruc Empresa:", ruc);
+		do { 
+			msgbox("El rango es de 8 digitos", color::YELLOW);
+			boxInput(80, 20, "Ruc Empresa:", ruc); 
+		} while (ruc < 10000000 || ruc > 999999999);
 		client->company->setRuc(ruc);
 	}
 
-	void option1() {  
+
+
+
+	void option1() {
 		system("cls");
 
 		boxInterface();
 
 		Client* client = new Client();
-		
+
 		recordsTitle();
 
 		registerUser(client);
 		registerData(client);
 		registerCompany(client);
-		
+		menuConfirmation(confirmation);
+
 		if (!users->clientExists(client)) {
 			users->registerClient(client);
 			position(9, 26);
@@ -64,21 +115,15 @@ public:
 			cout << "Cliente registrado";
 			color::reset();
 		}
-		else {
-			position(9, 26);
-			color::setTxtBgColor(color::LIGHT_WHITE, color::BG_RED);
-			cout << "El usuario ya existe";
-			color::reset();
-		}
 
-		system("pause>>null");
+		Sleep(150);
 		system("cls");
-		
+
 		boxAscii();
 		drawMenu();
 	}
 
-	void option2() { 
+	void option2() {
 		cout << "Ingerse el usuario a buscar: ";
 		cin >> user;
 		users->searchUser(user);
@@ -87,7 +132,11 @@ public:
 
 private:
 	User* users;
-	
 	string name, lastname, name_company, user, password;
 	int dni, age, phone, ruc;
+
+	MenuLibrary::RightLeft::AllOptions* confirmationMenu;
+	const char* optionsMenu[2];
+	vector<function<void()>> functionsSubMenu;
+	bool confirmation;
 };
