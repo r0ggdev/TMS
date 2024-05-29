@@ -11,8 +11,8 @@ int main() {
 	const char* options[]{ "LOGIN", "SIGN-IN", "EXIT" };
 
 	vector<function<void()>> functions{
-		[&control]() { Beep(1500, 100); control.option1(); },
-		[&control]() { Beep(1500, 100); control.option2(); },
+		[&control]() { Beep(1500, 100); control.option1(); control.clearOptions(); },
+		[&control]() { Beep(1500, 100); control.option2(); control.clearOptions(); },
 		[]() {exit(0); }
 	};
 
