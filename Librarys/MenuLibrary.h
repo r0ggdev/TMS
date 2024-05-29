@@ -30,10 +30,11 @@ public:
         handleInput();
     }
 
+    virtual void setColorReset(short _txt_color_reset, short _bg_color_reset);
+
 private:
 
     void colorReset();
-
     void setColorTxtBgColor();
     void position(float _x, float _y);
 
@@ -53,7 +54,7 @@ protected:
     const char* options[_size_];
     int options_position[_size_];
     int accumulated_length;
-    short bg_color, txt_color;
+    short bg_color, txt_color, txt_color_reset, bg_color_reset;
 
     std::function<void()> option_functions[_size_];
 
