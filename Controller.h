@@ -20,22 +20,24 @@ public:
 	
 	void menuConfirmation(bool& confirmation) {
 		confirmation = false;
+		bool bucleConfirmation = false;
 
 		color::setBackgroundColor(color::BG_YELLOW);
 		boxAscii(subMenu_X - 4, subMenu_Y - 2, subMenu_W, subMenu_H);
 		confirmationMenu->setColorReset(color::BLACK, color::BG_YELLOW);
 
 		functionsSubMenu = {
-			[&confirmation]() {
+			[&confirmation, &bucleConfirmation]() {
 				confirmation = true;
+				bucleConfirmation = true;
 				clearArea(subMenu_X - 4, subMenu_Y - 2, subMenu_W, subMenu_H);
 			},
-			[&confirmation]() {confirmation = false; }
+			[&confirmation, &bucleConfirmation]() {confirmation = false; bucleConfirmation = true; }
 		};
 
 		confirmationMenu->addOptions(optionsMenu, functionsSubMenu);
 
-		while (!confirmation) {
+		while (!bucleConfirmation) {
 			confirmationMenu->showMenu();
 		}
 		color::reset();
@@ -46,6 +48,7 @@ public:
 		do {
 			boxInput(10, 14, "User:", user);
 			client->setUser(user);
+			if (user == "*") { return; }
 		} while (users->clientExists(client));
 
 		boxInput(45, 14, "Password:", password);
@@ -92,7 +95,12 @@ public:
 	}
 
 
+	void clearOptions() {
+		system("cls");
 
+		boxAscii();
+		drawMenu();
+	}
 
 	void option1() {
 		system("cls");
@@ -104,29 +112,44 @@ public:
 		recordsTitle();
 
 		registerUser(client);
+		if (user == "*") { return; }
 		registerData(client);
 		registerCompany(client);
 		menuConfirmation(confirmation);
 
-		if (!users->clientExists(client)) {
+		if (!users->clientExists(client) && confirmation) {
 			users->registerClient(client);
 			position(9, 26);
 			color::setTxtBgColor(color::LIGHT_WHITE, color::BG_DARK_GREEN);
 			cout << "Cliente registrado";
 			color::reset();
 		}
+		else { delete client; return; }
 
 		Sleep(150);
-		system("cls");
-
-		boxAscii();
-		drawMenu();
 	}
 
 	void option2() {
-		cout << "Ingerse el usuario a buscar: ";
-		cin >> user;
-		users->searchUser(user);
+		system("cls");
+
+		boxInterface();
+		drawLogin();
+
+		do {
+			clearBoxInput(60,14);
+			boxInput(25, 14, "Usuario:", user);
+			if (user == "*") { return; }
+			boxInput(60, 14, "Password:", password);
+
+		} while (!users->login(user, password));
+		if (!users->searchUserList(user)) { users->loadUser(user); }
+		
+		//cout << "Entraste";
+		//cout << "Ingerse el usuario a buscar: ";
+		//cin >> user;
+		//users->searchUser(user);
+
+		system("pause");
 	}
 
 
