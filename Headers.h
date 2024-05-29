@@ -103,10 +103,7 @@ void boxInput(int _x, int _y, string _tittle, T& _input, int _width = 25, int _h
             const char* inputCStr = inputStr.c_str();
             
             if (!isDigit(inputCStr)) {
-                color::reset();
-                position(_x + 2, _y + 1);
-                for (int i = 0; i < _width-1; ++i) { cout << " "; }
-                position(_x + 2, _y + 1);
+                clearBoxInput(_x, _y);
             }
             else {
                 istringstream(inputStr) >> _input;
@@ -115,6 +112,13 @@ void boxInput(int _x, int _y, string _tittle, T& _input, int _width = 25, int _h
             }
         }
     }
+}
+
+void clearBoxInput(int _x, int _y, int _width = 25){
+    color::reset();
+    position(_x + 2, _y + 1);
+    for (int i = 0; i < _width - 1; ++i) { cout << " "; }
+    position(_x + 2, _y + 1);
 }
 
 void clearArea(int x, int y, int width, int height) {
