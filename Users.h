@@ -81,10 +81,7 @@ public:
 		string subdirectory = encryption(client->getUser(), 4);
 
 		if (file_clients->subfolderExists(subdirectory)&& msg){
-			position(9, 26);
-			color::setTxtBgColor(color::LIGHT_WHITE, color::BG_RED);
-			cout << "El usuario ya existe";
-			color::reset();
+			msgbox("El usuario ya existe", color::LIGHT_WHITE, color::BG_RED);
 		}
 
 		return file_clients->subfolderExists(subdirectory);
@@ -96,28 +93,47 @@ public:
 		lst_clients->addInitial(clientData);
 	}
 
+	bool searchUserList(string& _user){
+		auto searched = [_user](Client* a) { return a->getUser() == _user; };
+		Client* customer_found = lst_clients->search(searched);
+		
+		return customer_found != nullptr ? true : false;
+	}
+
 	void searchUser(string& _user) {
 		auto searched = [_user](Client* a) { return a->getUser() == _user; };
 		Client* customer_search = new Client();
 		customer_search->setUser(_user);
 
-		Client* customer_found = lst_clients->search(searched);
-		if (customer_found != nullptr) {
-			color::setTextColor(color::GREEN);
-			cout << customer_found->showAdminInfo();
+		if (searchUserList(_user)) {
+			auto searched = [_user](Client* a) { return a->getUser() == _user; };
+			cout << lst_clients->findPosition(searched);
 		}
-		else if (clientExists(customer_search,0)) {
-			cout << "SIIIIIUUUUUUU";
+		else if (clientExists(customer_search,false)) {
+			// cout << "SIIIIIUUUUUUU";
 		}
 		else {
 			msgbox("El usuario " + _user + " no se ha podido encontrar ", color::RED);
-			//position(msgX, msgY);
-			//color::setTextColor(color::RED);
-			//cout << "El usuario " << _user << " no se ha podido encontrar";
-			//cout << lst_clients->listLength();
 		}
 
 		delete customer_search;
+	}
+
+	bool login(string _user, string _password, bool msg = true) {
+		auto subdirectory = encryption(_user, 4);
+		string crdentialUser = (*file_clients)[subdirectory].get("credentials", 1);
+		string crdentialPassword = (*file_clients)[subdirectory].get("credentials", 2);
+
+		bool exist = crdentialUser == _user && crdentialPassword == _password ? true : false;
+		bool user_exist = crdentialUser == _user && crdentialPassword != _password ? true : false;
+
+		if (user_exist && msg) {
+			msgbox("Password Incorrecto", color::LIGHT_RED);
+		}
+		else if (!exist && msg) {
+			msgbox("El usuario no existe", color::LIGHT_RED);
+		}
+		return exist;
 	}
 
 private:
