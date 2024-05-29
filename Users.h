@@ -77,8 +77,16 @@ public:
 		(*file_clients)[subdirectory].log("company", NUM_COMPANY_DATA, data.companyData);
 	}
 
-	bool clientExists(Client* client) {
+	bool clientExists(Client* client, bool msg = true) {
 		string subdirectory = encryption(client->getUser(), 4);
+
+		if (file_clients->subfolderExists(subdirectory)&& msg){
+			position(9, 26);
+			color::setTxtBgColor(color::LIGHT_WHITE, color::BG_RED);
+			cout << "El usuario ya existe";
+			color::reset();
+		}
+
 		return file_clients->subfolderExists(subdirectory);
 	}
 
@@ -88,22 +96,28 @@ public:
 		lst_clients->addInitial(clientData);
 	}
 
-	void searchUser(string _user) {
-		Client* customer_searched = new Client();
-		customer_searched->setUser(_user);
+	void searchUser(string& _user) {
+		auto searched = [_user](Client* a) { return a->getUser() == _user; };
+		Client* customer_search = new Client();
+		customer_search->setUser(_user);
 
-		auto searched = [](Client* a, Client* b) { return a->getUser() == b->getUser(); };
-
-		Client* customer_found = lst_clients->search(customer_searched, searched);
+		Client* customer_found = lst_clients->search(searched);
 		if (customer_found != nullptr) {
 			color::setTextColor(color::GREEN);
 			cout << customer_found->showAdminInfo();
 		}
-		else {
-			position(msgX, msgY);
-			color::setTextColor(color::RED);
-			cout << "El usuario " << _user << " no se ha podido encontrar";
+		else if (clientExists(customer_search,0)) {
+			cout << "SIIIIIUUUUUUU";
 		}
+		else {
+			msgbox("El usuario " + _user + " no se ha podido encontrar ", color::RED);
+			//position(msgX, msgY);
+			//color::setTextColor(color::RED);
+			//cout << "El usuario " << _user << " no se ha podido encontrar";
+			//cout << lst_clients->listLength();
+		}
+
+		delete customer_search;
 	}
 
 private:
