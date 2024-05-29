@@ -118,6 +118,19 @@ public:
         return empty;
     }
 
+    int findPosition(function<bool(value)>compare) {
+        Node* aux = initial;
+        int position = 0;
+        while (aux != nullptr) {
+            if (compare(aux->element)) {
+                return position;
+            }
+            aux = aux->next;
+            position++;
+        }
+        return -1;
+    }
+
 private:
     Node* initial;
     uint listlength;
