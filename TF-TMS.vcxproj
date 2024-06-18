@@ -115,6 +115,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AdvancedOrdering.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Company.h" />
@@ -123,8 +124,11 @@
     <ClInclude Include="Draws.h" />
     <ClInclude Include="Driver.h" />
     <ClInclude Include="Files.h" />
+    <ClInclude Include="HashTable.h" />
     <ClInclude Include="Headers.h" />
     <ClInclude Include="Lists.h" />
+    <ClInclude Include="Queues.h" />
+    <ClInclude Include="Stacks.h" />
     <ClInclude Include="Users.h" />
     <ClInclude Include="Vehicles.h" />
   </ItemGroup>
