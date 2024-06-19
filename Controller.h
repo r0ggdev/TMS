@@ -1,6 +1,8 @@
 #pragma once
 #include"Client.h"
 #include"Users.h"
+#include "Profile.h"
+
 #define subMenu_X 46
 #define subMenu_Y 15
 #define subMenu_W 30
@@ -12,6 +14,8 @@ public:
 	Controller() {
 		users = new User();
 		confirmationMenu = new MenuLibrary::RightLeft::AllOptions(subMenu_X, subMenu_Y, 2, 62, 0, color::BG_GRAY, color::BG_YELLOW);
+		userMenu = new MenuLibrary::RightLeft::AllOptions(subMenu_X-15, subMenu_Y+5, 5, 127, ' ', color::CYAN, color::BG_BLACK);
+
 		confirmation = false;
 		optionsMenu[0] = { "Aceptar" };
 		optionsMenu[1] = { "Cancelar" };
@@ -94,6 +98,44 @@ public:
 		client->company->setRuc(ruc);
 	}
 
+	void menuUser(string& _user) {
+		bool exit = false;
+		Profile profileUser(users);
+
+		system("cls");
+		boxAscii();
+		const char* options[]{ "Perfil","Pedidos","Reportes","Ordenamiento", "Salir"};
+
+		vector<function<void()>> functions = {
+			[&exit, &profileUser, &_user]() {
+				exit = true;
+				system("cls");
+				profileUser.profile(_user);
+				cin.ignore();
+				exit = false;
+				system("cls");
+				boxAscii();
+			},
+
+			[&exit](){
+				exit = true;
+				system("cls");
+
+				cin.ignore();
+				exit = false;
+				boxAscii();
+			},
+			[&exit](){},
+			[&exit](){},
+			[&exit]() {exit = true; }
+		};
+
+		userMenu->addOptions(options, functions);
+
+		while (!exit) {
+			userMenu->showMenu();
+		}
+	}
 
 	void clearOptions() {
 		system("cls");
@@ -143,13 +185,13 @@ public:
 
 		} while (!users->login(user, password));
 		if (!users->searchUserList(user)) { users->loadUser(user); }
-		
+		menuUser(user);
 		//cout << "Entraste";
 		//cout << "Ingerse el usuario a buscar: ";
 		//cin >> user;
 		//users->searchUser(user);
 
-		system("pause");
+		//system("pause");
 	}
 
 
@@ -159,6 +201,7 @@ private:
 	int dni, age, phone, ruc;
 
 	MenuLibrary::RightLeft::AllOptions* confirmationMenu;
+	MenuLibrary::RightLeft::AllOptions* userMenu;
 	const char* optionsMenu[2];
 	vector<function<void()>> functionsSubMenu;
 	bool confirmation;
