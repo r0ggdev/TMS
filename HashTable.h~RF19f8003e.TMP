@@ -23,7 +23,7 @@ public:
 		}
 		delete[] table;
 	}
-	
+
 	struct Entity {
 		Entity(TypeKey _key, TypeValue _value) {
 			this->key = _key;
@@ -35,17 +35,13 @@ public:
 
 	private:
 		TypeKey key;
-		TypeValue value;
+		LinkedList<TypeValue> value;
 	};
 
-	int functionHash(TypeKey _key) {
-		int hash = functionHash(_key);
-		for (size_t character = 0; character < _key; character++) { hash += character; }
-		
-		for (entity : table[hash]) {
-			if () {
-
-			}
+	int functionHash(TypeKey& _key) {
+		int adding = 0;
+		for (size_t character = 0; character < _key ; character++) {
+			adding += a;
 		}
 
 		return adding % table_size;
@@ -90,10 +86,10 @@ public:
 		}
 		return "";
 	}
-
+	
 	int getSize() { return table_size; }
 	int getSizeNow() { return quantity_elements; }
-	
+
 private:
 	Entity** table;
 	int quantity_elements;

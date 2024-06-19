@@ -115,7 +115,10 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AdvancedOrdering.h" />
+    <ClInclude Include="Generator.h" />
+    <ClInclude Include="Order.h" />
+    <ClInclude Include="Profile.h" />
+    <ClInclude Include="QuickSort.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Company.h" />

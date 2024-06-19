@@ -90,7 +90,7 @@ public:
 	void loadUser(string _user) {
 		auto subdirectory = encryption(_user, 4);
 		Client* clientData = setClientData(new Client(), subdirectory);
-		lst_clients->addInitial(clientData);
+		lst_clients->addInitial(clientData); 
 	}
 
 	bool searchUserList(string& _user){
@@ -117,6 +117,13 @@ public:
 		}
 
 		delete customer_search;
+	}
+
+	Client getClient(string& _user) {
+		auto searched = [_user](Client* a) { return a->getUser() == _user; };
+		Client* customer_found = lst_clients->search(searched);
+
+		return *customer_found;
 	}
 
 	bool login(string _user, string _password, bool msg = true) {
