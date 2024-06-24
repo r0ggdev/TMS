@@ -116,7 +116,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Generator.h" />
+    <ClInclude Include="Marker.h" />
     <ClInclude Include="Order.h" />
+    <ClInclude Include="OrderManager.h" />
     <ClInclude Include="Profile.h" />
     <ClInclude Include="QuickSort.h" />
     <ClInclude Include="Client.h" />

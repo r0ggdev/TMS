@@ -3,6 +3,8 @@
 #include"Users.h"
 #include "Profile.h"
 
+#include"OrderManager.h"
+
 #define subMenu_X 46
 #define subMenu_Y 15
 #define subMenu_W 30
@@ -107,7 +109,7 @@ public:
 		const char* options[]{ "Perfil","Pedidos","Reportes","Ordenamiento", "Salir"};
 
 		vector<function<void()>> functions = {
-			[&exit, &profileUser, &_user]() {
+			[&]() {
 				exit = true;
 				system("cls");
 				profileUser.profile(_user);
@@ -117,9 +119,13 @@ public:
 				boxAscii();
 			},
 
-			[&exit](){
+			[&](){
+				OrderManager order;
 				exit = true;
 				system("cls");
+
+				order.addOrder(40, _user);
+				order.printTable(40, _user);
 
 				cin.ignore();
 				exit = false;

@@ -9,11 +9,16 @@
 
 #define _size_ 100
 
-#include<iostream>
-#include<functional>
-#include<sstream>
-#include<fstream>
-#include<time.h>
+#include <iostream>
+#include <functional>
+#include <sstream>
+#include <fstream>
+#include <iomanip> 
+#include <time.h>
+#include <vector>
+#include <string>
+#include <algorithm>
+
 #include"Colors.h"
 #include"MenuLibrary.h"
 #include"Draws.h"

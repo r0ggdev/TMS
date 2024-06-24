@@ -1,101 +1,83 @@
 #pragma once
-#include"Headers.h"
-#include"Lists.h"
+#include "Lists.h"
 
 template<typename TypeKey, typename TypeValue>
-class HashTable
-{
+class HashTable {
 public:
-	HashTable(int _table_size = 128){
-		this->table_size = _table_size;
-		table = new Entity * [table_size];
 
-		for (int i = 0; i < table_size; i++) {
-			table[i] = nullptr;
-		}
+    HashTable(int _table_size = 128) {
+        table_size = _table_size;
+        quantity_elements = 0;
 
-		quantity_elements = 0;
-	}
+        table = new LinkedList<Entity*>[table_size];
+    }
 
-	~HashTable(){
-		for (int i = 0; i < table_size; i++) {
-			if (table[i] != nullptr) delete table[i];
-		}
-		delete[] table;
-	}
-	
-	struct Entity {
-		Entity(TypeKey _key, TypeValue _value) {
-			this->key = _key;
-			this->value = _value;
-		}
+    ~HashTable() {
+        for (int i = 0; i < table_size; ++i) {
+            while (!table[i].isEmpty()) {
+                table[i].eraseInitial();
+            }
+        }
+        quantity_elements = 0;
+        delete[] table;
+    }
 
-		TypeKey getkey() { return key; }
-		TypeValue getValue() { return value; }
+    struct Entity {
+        Entity(TypeKey& _key, TypeValue& _value) : key(_key), value(_value) {}
 
-	private:
-		TypeKey key;
-		TypeValue value;
-	};
+        TypeKey getKey() { return key; }
+        TypeValue getValue() { return value; }
 
-	int functionHash(TypeKey _key) {
-		int hash = functionHash(_key);
-		for (size_t character = 0; character < _key; character++) { hash += character; }
-		
-		for (entity : table[hash]) {
-			if () {
+    private:
+        TypeKey key;
+        TypeValue value;
+    };
 
-			}
-		}
+    int functionHash(TypeKey& _key) {
+        int hash = 0;
 
-		return adding % table_size;
-	}
+        for (int i = 0; i < sizeof(_key); ++i) {
+            hash += reinterpret_cast<const unsigned char*>(&_key)[i];
+        }
+        return hash % table_size;
+    }
 
-	TypeValue insert(TypeKey _key, TypeValue _value) {
-		int base, step, hash;
+    void insert(TypeKey _key, TypeValue _value) {
+        int hash = functionHash(_key);
 
-		if (quantity_elements == table_size) return;
+        int pos = table[hash].findPosition([&](Entity* entity) { return entity->getKey() == _key; });
+        if (pos != -1) {
+            table[hash].modifyPosition(new Entity(_key, _value), pos);
+            return;
+        }
 
-		base = _key % table_size;
-		hash = base;
-		step = 0;
+        table[hash].addEnd(new Entity(_key, _value));
+        quantity_elements++;
+    }
 
-		while (table[hash]!=nullptr) {
-			hash = (base + step) % table_size;
-			step++;
-		}
+    bool search(TypeKey _key, TypeValue& _value) {
+        int hash = functionHash(_key);
+        Entity* result = table[hash].search([&](Entity* entity) { return entity->getKey() == _key; });
 
-		table[hash] = new Entity(_key,_value);
-		quantity_elements++;
-	}
+        if (result != nullptr) {
+            _value = result->getValue();
+            return true;
+        }
+        return false;
+    }
 
-	TypeValue search(TypeKey _key){
+    void remove(TypeKey _key) {
+        int hash = functionHash(_key);
+        int pos = table[hash].findPosition([&](Entity* entity) { return entity->getKey() == _key; });
+        if (pos != -1) quantity_elements--;
+    }
 
-		int step = 0;
-		int i, base;
+    int getSize() { return table_size; }
+    int getSizeNow() { return quantity_elements; }
 
-		i = base = _key % table_size;
 
-		int iteration = 0;
-
-		while (iteration < table_size) {
-			if (table[i] == nullptr) return "";
-			else if (table[i]->getkey() == _key) return table[i]->getValue();
-			else {
-				step++;
-				i = (base + step) % table_size;
-			}
-
-			iteration++;
-		}
-		return "";
-	}
-
-	int getSize() { return table_size; }
-	int getSizeNow() { return quantity_elements; }
-	
 private:
-	Entity** table;
-	int quantity_elements;
-	int table_size;
+    LinkedList<Entity*>* table;
+    int quantity_elements;
+    int table_size;
 };
