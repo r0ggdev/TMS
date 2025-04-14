@@ -21,9 +21,7 @@ int main() {
 	boxAscii();
 	drawMenu();
 
-	while (true) {
-		main_menu.showMenu();
-	}
+
 
 	return 0;
 }
